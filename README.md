@@ -1,45 +1,71 @@
-# Getting Started with Create React App
+Funky Recruit - AI-Based Interviewing Model
+Funky Recruit is an innovative AI-based interviewing platform crafted to redefine the interview practice process. This project, bootstrapped with Create React App, seamlessly blends cutting-edge technologies, including the official OpenAI API, to deliver an immersive and personalized experience for students refining their interview skills.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Project Structure
+src: Contains the source code for the project.
+public: Holds static assets like HTML files, images, or stylesheets.
+mysql_file: Includes the MySQL file for database-related configurations.
+database: Houses any additional database-related files.
+Technology Stack
+React
+Python
+MySQL (for database)
+Flask
+HTML
+CSS
+JavaScript
+Node
+Express
+Text-to-Speech API
+Speech-to-Text API
+OpenAI API
+Objectives
+Interactive User Experience:
+Funky Recruit creates an immersive platform to guide students through the interview practice process, introducing visually captivating avatar videos for lifelike scenarios.
 
-## Available Scripts
+Personalized Learning Paths:
+Empower users to customize interview practice with flexible technology stack choices (DSA, OOPs, MERN, JS, SQL) and adapt their learning journey by selecting the number of questions.
 
-In the project directory, you can run:
+Advanced Response System:
+The platform employs state-of-the-art technology, including the official OpenAI API, to capture and analyze student responses during mock interviews. Real-time feedback mechanisms provide instant insights into verbal communication, body language, and overall performance.
 
-### `npm start`
+Continuous Improvement and Adaptability:
+Funky Recruit establishes a dynamic feedback loop for continuous improvement, refining the platform based on valuable insights. The architecture is designed with scalability in mind, ensuring adaptability to emerging technologies and evolving user needs.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Features
+Interactive Avatar Video:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Engage users with avatar videos presenting interview questions for a realistic and immersive experience.
+Real-time Feedback:
 
-### `npm test`
+Receive instant feedback on responses, including assessments of body language and verbal communication.
+Comparison of Answers:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Store and compare user responses to model answers for a comprehensive and insightful assessment.
+Question Quantity Selection:
 
-### `npm run build`
+Allow users to decide the number of questions in each mock interview for a personalized and adaptive practice experience.
+OpenAI API Marking Scheme:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Leverage the power of the official OpenAI API for a sophisticated marking scheme, enhancing the assessment of user responses.
+Getting Started.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+We have also implemented conversion of input text given in voice format to text format for further processing by our application
+Clone the repository:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### git clone https://github.com/Divyanshu11011/FunkyRecruit.git
 
-### `npm run eject`
+Navigate to the project directory:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### cd funky-recruit
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Install dependencies:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Run the application:
 
-## Learn More
+### npm start
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
@@ -65,6 +91,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+### npm run build fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+Configure OpenAI API Key:
+
+In compare.py, replace "Openai.api_key" with your personal API key before running the project.
