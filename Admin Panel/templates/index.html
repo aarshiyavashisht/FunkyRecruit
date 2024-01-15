@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD Application</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Montserrat", sans-serif;
+        background-color: #e1e1e1; /* Dark Background Color */
+        margin: 20px;
+      }
+
+      h1,
+      h2 {
+        color: #5008ec; /* White Text Color */
+        font-weight: 700;
+      }
+
+      /* Header styling */
+      header {
+        background-color: #bbe3bd;
+        color: #5400a7;
+        padding: 20px;
+        text-align: center;
+      }
+
+      /* Form styling */
+      form {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      label,
+      select,
+      input {
+        margin: 10px;
+        display: block;
+        font-weight: 700;
+      }
+
+      select,
+      input {
+        padding: 12px;
+        border: 2px solid #9b61e1;
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: border 0.3s ease, background-color 0.3s ease;
+        background-color: #e8edab; /* Dark Input Background Color */
+        color: #b322fc; /* White Text Color */
+      }
+
+      select:hover,
+      input:hover {
+        border-color: #45a049;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #45a049;
+        background-color: #edddff; /* Dark Input Background Color on Focus */
+      }
+
+      .btn {
+        border: none;
+        width: 15em;
+        height: 3em; /* Decreased Button Height */
+        border-radius: 3em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        background: #7514ca; /* Classic Blue Button Background Color */
+        cursor: pointer;
+        transition: all 450ms ease-in-out;
+      }
+
+      .sparkle {
+        fill: #aaaaaa;
+        transition: all 800ms ease;
+      }
+
+      .text {
+        font-weight: 600;
+        color: #aaaaaa;
+        font-size: medium;
+      }
+
+      .btn:hover {
+        background: linear-gradient(
+          0deg,
+          #7813ae,
+          #9b30e3
+        ); /* Gradient Background Color on Hover */
+        box-shadow: inset 0px 1px 0px 0px rgba(186, 66, 230, 0.4),
+          inset 0px -4px 0px 0px rgba(234, 42, 255, 0.2),
+          0px 0px 0px 4px rgba(184, 16, 222, 0.2), 0px 0px 180px 0px #7515a1; /* Box Shadow on Hover */
+        transform: translateY(-2px);
+      }
+
+      .btn:hover .text {
+        color: white;
+      }
+
+      .btn:hover .sparkle {
+        fill: white;
+        transform: scale(1.2);
+      }
+
+      /* Table styling */
+      #displaytable {
+        background-color: #98b3ba;
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+      }
+
+      #displaytable th,
+      #displaytable td {
+        border: 2px solid #3f5e56;
+        padding: 16px;
+        text-align: left;
+        color: #ffffff; /* White Text Color */
+      }
+
+      #displaytable th {
+        background-color: #4caf50;
+      }
+
+      /* Centering content */
+      .center-content {
+        text-align: center;
+      }
+
+      /* Additional spacing */
+      .space {
+        margin-bottom: 20px;
+      }
+
+      /* Add responsiveness for smaller screens */
+      @media only screen and (max-width: 768px) {
+        body {
+          margin: 0;
+        }
+
+        header,
+        form,
+        #displaytable {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1 class="animate__animated animate__zoomIn">CRUD Application</h1>
+    </header>
+
+    <form>
+      <label for="selectedTable"> Table Name:</label>
+      <select id="selectedTable" name="selectedTable">
+        {% for table in tables %}
+        <option value="{{ table }}">{{ table }}</option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <div>
+      <label for="selectedTable">Filter Question</label>
+      <select id="difficulty" style="background-color: #e5f7e3; color: #333">
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>
+
+      <input type="number" id="questionId" placeholder="Question ID" />
+
+      <button class="btn" onclick="seeQuestion()">
+        <svg
+          height="24"
+          width="24"
+          fill="#FFFFFF"
+          viewBox="0 0 24 24"
+          data-name="Layer_1"
+          id="Layer_1"
+          class="sparkle"
+        >
+          <path
+            d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+          ></path>
+        </svg>
+
+        <span class="text">Generate</span>
+      </button>
+    </div>
+
+    <div id="questionResult" class="space">See question</div>
+
+    <center>
+      <button class="btn" id="b1" onclick="toggleTableVisibility()">
+        <svg
+          height="24"
+          width="24"
+          fill="#FFFFFF"
+          viewBox="0 0 24 24"
+          data-name="Layer_1"
+          id="Layer_1"
+          class="sparkle"
+        >
+          <path
+            d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.
+
+5,0,19.333,2.333,17,3.5Z"
+          ></path>
+        </svg>
+
+        <span class="text">Table Content</span>
+      </button>
+    </center>
+    <br />
+
+    <center>
+      <div id="displaytable"></div>
+    </center>
+
+    <center>
+      <button
+        class="btn"
+        id="closeTable"
+        style="display: none"
+        onclick="closeTable()"
+      >
+        <svg
+          height="24"
+          width="24"
+          fill="#FFFFFF"
+          viewBox="0 0 24 24"
+          data-name="Layer_1"
+          id="Layer_1"
+          class="sparkle"
+        >
+          <path
+            d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+          ></path>
+        </svg>
+
+        <span class="text">Close Table</span>
+      </button>
+    </center>
+
+    <div id="table-gap" class="space">.</div>
+
+    <h2 class="space">Add Topic</h2>
+    <input type="text" id="topicName" placeholder="Enter Topic Name" />
+    <button class="btn" onclick="addTopic()">
+      <svg
+        height="24"
+        width="24"
+        fill="#FFFFFF"
+        viewBox="0 0 24 24"
+        data-name="Layer_1"
+        id="Layer_1"
+        class="sparkle"
+      >
+        <path
+          d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+        ></path>
+      </svg>
+
+      <span class="text">Add Topic</span>
+    </button>
+
+    <h2 class="space">Add Question</h2>
+    <input type="text" id="question" placeholder="Enter Question" />
+    <input type="text" id="answer" placeholder="Enter Answer" />
+    <select id="difficulty" style="background-color: #e5f7e3; color: #333">
+      <option value="Easy">Easy</option>
+      <option value="Medium">Medium</option>
+      <option value="Hard">Hard</option>
+    </select>
+    <button class="btn" onclick="addQuestion()">
+      <svg
+        height="24"
+        width="24"
+        fill="#FFFFFF"
+        viewBox="0 0 24 24"
+        data-name="Layer_1"
+        id="Layer_1"
+        class="sparkle"
+      >
+        <path
+          d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+        ></path>
+      </svg>
+
+      <span class="text">Add Question</span>
+    </button>
+
+    <h2 class="space">Update Topic Name</h2>
+    <input type="text" id="oldTopicName" placeholder="Old Topic Name" />
+    <input type="text" id="newTopicName" placeholder="New Topic Name" />
+    <button class="btn" onclick="updateTopicName()">
+      <svg
+        height="24"
+        width="24"
+        fill="#FFFFFF"
+        viewBox="0 0 24 24"
+        data-name="Layer_1"
+        id="Layer_1"
+        class="sparkle"
+      >
+        <path
+          d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+        ></path>
+      </svg>
+
+      <span class="text">Update Topic Name</span>
+    </button>
+
+    <h2 class="space">Update Question</h2>
+    <input type="text" id="questionIdToUpdate" placeholder="Question ID" />
+    <input type="text" id="updatedQuestion" placeholder="Update question" />
+    <input type="text" id="updatedAnswer" placeholder="Update answer" />
+    <select
+      id="updatedDifficulty"
+      style="background-color: #e5f7e3; color: #333"
+    >
+      <option value="Easy">Easy</option>
+      <option value="Medium">Medium</option>
+      <option value="Hard">Hard</option>
+    </select>
+    <button class="btn" onclick="updateQuestion()">
+      <svg
+        height="24"
+        width="24"
+        fill="#FFFFFF"
+        viewBox="0 0 24 24"
+        data-name="Layer_1"
+        id="Layer_1"
+        class="sparkle"
+      >
+        <path
+          d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+        ></path>
+      </svg>
+      <span class="text">Update Question</span>
+    </button>
+
+    <h2 class="space">Delete Topic</h2>
+    <input type="text" id="topicToDelete" placeholder="Enter Topic to Delete" />
+    <button class="btn" onclick="deleteTopic()">
+      <svg
+        height="24"
+        width="24"
+        fill="#FFFFFF"
+        viewBox="0 0 24 24"
+        data-name="Layer_1"
+        id="Layer_1"
+        class="sparkle"
+      >
+        <path
+          d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+        ></path>
+      </svg>
+      <span class="text">Delete Topic</span>
+    </button>
+
+    <h2 class="space">Delete Question</h2>
+    <input type="text" id="deleteQuestionId" placeholder="Question ID" />
+    <button class="btn" onclick="deleteQuestion()">
+      <svg
+        height="24"
+        width="24"
+        fill="#FFFFFF"
+        viewBox="0 0 24 24"
+        data-name="Layer_1"
+        id="Layer_1"
+        class="sparkle"
+      >
+        <path
+          d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+        ></path>
+      </svg>
+      <span class="text">Delete Question</span>
+    </button>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
