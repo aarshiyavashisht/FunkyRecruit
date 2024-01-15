@@ -13,27 +13,27 @@ args = parser.parse_args()
 
 # Connect to the MySQL database
 con = mysql.connector.connect(
-    user="root",
-    password="div123",
-    host="localhost",
-    database="mydatabase"  # Replace with the actual name of your database
+	user="root",
+	password="div123",
+	host="localhost",
+	database="mydatabase"  # Replace with the actual name of your database
 )
 
 cursor = con.cursor()
 
 # Fetch table names and print them
 if args.getTableNames:
-    cursor.execute("SHOW TABLES")
-    tables = [table[0] for table in cursor.fetchall()]
-    print(json.dumps({"tableNames": tables}))
-    exit()
+	cursor.execute("SHOW TABLES")
+	tables = [table[0] for table in cursor.fetchall()]
+	print(json.dumps({"tableNames": tables}))
+	exit()
 
 # Validate command line arguments
 tech_stack = args.techStack.lower() if args.techStack else None
 
 if not tech_stack or not args.totalQuestions:
-    print("Invalid arguments. Please provide tech stack and total number of questions.")
-    exit()
+	print("Invalid arguments. Please provide tech stack and total number of questions.")
+	exit()
 
 # Fetch all available tech stacks from table names
 cursor.execute("SHOW TABLES")
@@ -41,8 +41,8 @@ available_tech_stacks = [table[0].lower() for table in cursor.fetchall()]
 
 # Validate tech stack input based on available table names
 if tech_stack not in available_tech_stacks:
-    print(f"Invalid tech stack. Please choose from: {', '.join(available_tech_stacks)}")
-    exit()
+	print(f"Invalid tech stack. Please choose from: {', '.join(available_tech_stacks)}")
+	exit()
 
 # Define the desired distribution percentages
 distribution_percentages = {"Easy": 0.33, "Medium": 0.5, "Hard": 0.17}
@@ -54,27 +54,27 @@ questions = []
 
 # Fetch questions for each difficulty level
 for difficulty, count in difficulty_counts.items():
-    query = f"SELECT * FROM {tech_stack} WHERE difficulty = %s ORDER BY RAND() LIMIT %s"
-    cursor.execute(query, (difficulty, count))
-    questions.extend(cursor.fetchall())
+	query = f"SELECT * FROM {tech_stack} WHERE difficulty = %s ORDER BY RAND() LIMIT %s"
+	cursor.execute(query, (difficulty, count))
+	questions.extend(cursor.fetchall())
 
 # Sort the questions based on difficulty level (Easy -> Medium -> Hard)
 sorted_questions = sorted(questions, key=lambda x: ("Easy", "Medium", "Hard").index(x[3]))
 
 # Display the fetched questions
 if sorted_questions:
-    result = [
-        {
-            "question_id": question[0],
-            "question_text": question[1],
-            "answer_text": question[2],
-            "difficulty_level": question[3],
-        }
-        for question in sorted_questions
-    ]
-    print(json.dumps(result))
+	result = [
+		{
+			"question_id": question[0],
+			"question_text": question[1],
+			"answer_text": question[2],
+			"difficulty_level": question[3],
+		}
+		for question in sorted_questions
+	]
+	print(json.dumps(result))
 else:
-    print("No questions found for the specified tech stack and difficulty levels.")
+	print("No questions found for the specified tech stack and difficulty levels.")
 
 # Close the cursor and connection
 cursor.close()
