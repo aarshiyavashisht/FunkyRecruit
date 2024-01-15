@@ -189,6 +189,70 @@ def get_table_content():
 
 
 
+@app.route('/get_specific_question', methods=['POST'])
+def get_specific_question():
+    table_name = request.form.get('tableName')
+    difficulty = request.form.get('difficulty')
+    question_id = request.form.get('questionId')
+
+    with mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+    ) as connection:
+        with connection.cursor() as cursor:
+            # Fetch the specific question based on conditions
+            if not question_id:
+                # If question_id is empty, fetch all questions for the given difficulty
+                cursor.execute(f"SELECT * FROM {table_name} WHERE difficulty = %s", (difficulty,))
+            else:
+                # Fetch questions based on both difficulty and ID
+                cursor.execute(f"SELECT * FROM {table_name} WHERE difficulty = %s AND id = %s", (difficulty, question_id))
+
+            columns = [desc[0] for desc in cursor.description]
+            rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            return jsonify(rows)
+
+
+@app.route('/update_question', methods=['POST'])
+def update_question():
+    table_name = request.form.get('questionTableUpdate')
+    question_id = request.form.get('questionIdToUpdate')
+    updated_question = request.form.get('updatedQuestion')
+    updated_answer = request.form.get('updatedAnswer')
+    updated_difficulty = request.form.get('updatedDifficulty')
+
+    # Ensure that the difficulty is one of the allowed values
+    allowed_difficulties = ['Easy', 'Medium', 'Hard']
+    if updated_difficulty not in allowed_difficulties:
+        return "Invalid updated difficulty level"
+
+    try:
+        with mysql.connector.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=database
+        ) as connection:
+            with connection.cursor() as cursor:
+                # Print debug information
+                print(f"Updating question ID {question_id} in table {table_name}")
+
+                # Implement the logic to update a question
+                update_query = f"UPDATE {table_name} SET question = %s, answer = %s, difficulty = %s WHERE id = {question_id}"
+                cursor.execute(update_query, (updated_question, updated_answer, updated_difficulty))
+                connection.commit()
+
+        return f"Question with ID {question_id} updated successfully in {table_name}"
+
+    except mysql.connector.Error as err:
+        print("MySQL Error:", err)
+        return f"Error updating question: {err}. Check the server logs for details."
+    except Exception as e:
+        print("Error updating question:", e)
+        return "Error updating question. Check the server logs for details."
 
 
 if __name__ == '__main__':
